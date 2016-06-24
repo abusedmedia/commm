@@ -1,8 +1,9 @@
 dev:
   - 'browserSync:dev'
 
-custom:
+build:
   - 'clean:dist' # clean public folder
+  - 'create_js_cache'
   - 'copy:app' # duplicate the entire src folder for manipulation
   - 'useminPrepare:multi'
   - 'concat:generated'
@@ -11,22 +12,9 @@ custom:
   - 'usemin'
   - 'clean:tmp'
 
-# this group of tasks will create a version of the app in a proper folder 
-# and it will be added on gh-pages presenving the previous one with a generated index file
-# npm run tag before this
-version_release:
-  - 'clean:tmp'
-  - 'clean:dist'
-  - 'copy:ver'
-  - 'create_index' 
-  - 'gh-pages:changelog'
-  - 'clean:tmp'
 
 
-
-
-
-build:
+build__:
   - 'clean:dist' # clean public folder
   - 'copy:app' # duplicate the entire src folder for manipulation
 
@@ -43,14 +31,4 @@ build:
   - 'copy:dist'
   - 'inline' # inject css into html 
   - 'clean:tmp'
-
-
-other_tasks:
-  - 'fetchJson:fetchSomeApi'
-  - 'ngtemplates'
-  - 'ngAnnotate'
-  - 'svgstore:dist'
-  - 'filerev:dist'
-  - 'CsvToL10nJson:dist'
-  - 'inlinecss' # this inline each css rune in html tag (perfect for newsletter)
 

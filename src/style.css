@@ -3,7 +3,7 @@
 	background-color: yellow;
 	width: 55px;
 	height: 55px;
-	position: absolute;
+	position: fixed;
 	z-index: 99999;
 	
 	display: flex;
@@ -22,7 +22,7 @@
 #commm_container{
 	font-family: 'HelveticaNeue', sans-serif;
 	font-size: 80%;
-	position: absolute;
+	position: fixed;
 	z-index: 99999;
 
 	width: 350px;
@@ -35,7 +35,8 @@
 	height: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
-
+	-webkit-overflow-scrolling: touch; /* lets it scroll lazy */
+	-webkit-overflow-scrolling: auto; /* stop scrolling immediately */
 }
 
 #commm_container_inner{
