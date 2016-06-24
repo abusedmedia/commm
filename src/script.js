@@ -130,8 +130,6 @@
 
 					p.threads.push(thread)
 
-					console.log(page)
-
 					db.ref().update(page)
 							.then(function(data){
 								console.log('then', data)
@@ -148,6 +146,7 @@
 				function updateList(){
 					$('.reply').off()
 					$('.mark').off()
+					$('.del').off()
 
 					$('#commm_mainList').html('')
 					page[locref].threads.forEach(function(d, i){
@@ -155,8 +154,11 @@
 							var item = $('<li><button class="mark" id="commm_mark__'+i+'">Mark</button></li>')
 							var repl = d.replies
 							repl.forEach(function(c, j){
-								var reply = $('<p>'+c.name+': <small>'+c.text+'</small></p>')
-								item.append(reply)
+								if(c.status != 'archived'){
+									var del = (c.email == usr.email) ? '<button class="del" id="commm_del__'+i+'__'+j+'">x</button>' : ''
+									var reply = $('<p>'+del+c.name+': <small>'+c.text+'</small></p>')
+									item.append(reply)
+								}
 							})
 							item.append('<input id="commm_reply__'+i+'" type="text" /><button class="reply" id="commm_reply_submit__'+i+'">Add</button>')
 							$('#commm_mainList').append(item)
@@ -168,7 +170,7 @@
 						var txt = $('#commm_reply__'+id).val()
 
 						var thread = page[locref].threads[id]
-						thread.replies.push({name:usr.the_name, text:txt})
+						thread.replies.push({name:usr.the_name, email:usr.email, text:txt})
 
 						db.ref().update(page)
 							.then(function(data){
@@ -185,6 +187,21 @@
 						var id = $(this).attr('id').split('__')[1]
 						var thread = page[locref].threads[id]
 						thread.status = 'archived'
+						db.ref().update(page)
+							.then(function(data){
+								console.log('then', data)
+								updateList()
+							})	
+							.catch(function(data){
+								console.log('catch', data)
+							})
+						return false
+					})
+
+					$('.del').on('click', function(){
+						var ids = $(this).attr('id').split('__')
+						var msg = page[locref].threads[ids[1]].replies[ids[2]]
+						msg.status = 'archived'
 						db.ref().update(page)
 							.then(function(data){
 								console.log('then', data)

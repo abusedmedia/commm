@@ -34,9 +34,8 @@
 
 	height: 100%;
 	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-y: hidden;
 	-webkit-overflow-scrolling: touch; /* lets it scroll lazy */
-	-webkit-overflow-scrolling: auto; /* stop scrolling immediately */
 }
 
 #commm_container_inner{
