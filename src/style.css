@@ -19,7 +19,7 @@
 	font-size: 16px;
 }
 
-#commm_container{
+#commm{
 	font-family: 'HelveticaNeue', sans-serif;
 	font-size: 80%;
 	position: fixed;
@@ -38,33 +38,80 @@
 	-webkit-overflow-scrolling: touch; /* lets it scroll lazy */
 }
 
-#commm_container_inner{
-	padding: 1rem;
+
+.commm_head_hide{
+	padding: .5rem;
+	background-color: #ccc;
+	color: white;
+	display: flex;
+	justify-content:space-between;
+	cursor: pointer;
+}
+
+#commm_login_btn{
+	height: 100px;
+	display: flex;
+	justify-content:center;
+	align-items:center;
+}
+#commm_login_btn > img{
+	width: 60%;
+	cursor: pointer;
 }
 
 #commm_head{
 	padding: 1rem;
-	background-color: #ccc;
 	margin-bottom: 1rem;
+}
+
+#commm_name{
+	display: flex;
+	justify-content:space-between;
+	margin-bottom: 1rem;
+}
+#commm_name span{
+	font-size: 16px;
+}
+
+
+#commm_new_thread{
+}
+#commm_new_thread textarea{
+	display: block;
+	width: 100%;
+	border: none;
+	border: 1px solid #ccc;
+}
+#commm_new_thread button{
+	
 }
 
 #commm_mainList{
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+	padding: 1rem;
+}
+
+#commm_mainList textarea{
+	width: 100%;
 }
 
 #commm_mainList p{
 	margin: 0;
 	padding: .5rem 0;
-	font-size: 10px;
+	font-size: 11px;
 	font-weight: bold;
 }
 
 #commm_mainList small{
 	display: block;
 	font-weight: 100;
-	font-size: 14px;
+	font-size: 13px;
+	line-height: 18px;
+	padding-left: .75rem;
+	padding-bottom: .5rem;
+	border-bottom: 1px solid #eee;
 }
 
 #commm_mainList li{

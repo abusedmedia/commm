@@ -2,36 +2,13 @@
 
 	$(window).ready(function(){
 
-
-
-			$('#commm_container').css({x:350, display:'none'})
-			var open = false;
-
-			$('#commm_togglr').on('click', function(){
-				$('#commm_togglr').hide()
-				$('#commm_container').css({display:'block'})
-				$('#commm_container').transition({x:0}, 500, 'easeInOutExpo')
-				open=true
-			})
-			$('#commm_close').on('click', function(){
-				$('#commm_container').transition({x:350}, 500, 'easeInOutExpo')
-				setTimeout(function(){
-					$('#commm_container').css({display:'none'})
-				}, 501)
-				$('#commm_togglr').show()
-				open=true
-			})
-
 			
-			firebase.initializeApp(firebase_config);
 
 			firebase.database().ref().on('value', function(snapshot){
-				console.log(snapshot.val())
+				console.log('value', snapshot.val())
 			})
 
 			var provider = new firebase.auth.GoogleAuthProvider();
-
-
 
 			// check
 			firebase.auth().onAuthStateChanged(function(user) {
@@ -46,7 +23,7 @@
 
 
 			// login
-			$('#commm_login').on('click', function(){
+			$('[commm_login]').on('click', function(){
 				firebase.auth().signInWithRedirect(provider);
 				firebase.auth().getRedirectResult().then(function(result) {
 				  	console.log(result.user)
@@ -65,7 +42,7 @@
 				return false;
 			})
 
-			$('#commm_login').hide()
+			$('#commm_login_btn').hide()
 			$('#commm_logout').hide()
 			$('#commm_newthread').hide()
 			$('#commm_newtext').hide()
@@ -73,7 +50,7 @@
 			function setAsLoggedIn(usr){
 				$('#commm_displayName').text(usr.the_name)
 				$('#commm_logout').show()
-				$('#commm_login').hide()
+				$('#commm_login_btn').hide()
 				$('#commm_newthread').show()
 				$('#commm_newtext').show()
 			}
@@ -81,12 +58,24 @@
 			function setAsLoggedOut(){
 				$('#commm_displayName').text('')
 				$('#commm_logout').hide()
-				$('#commm_login').show()
+				$('#commm_login_btn').show()
 				$('#commm_newthread').hide()
 				$('#commm_newtext').hide()
 				$('#commm_mainList').html('')
 			}
 
+
+
+			function update(page){
+				var db = firebase.database();
+				db.ref().update(page)
+					.then(function(data){
+						console.log('then', data)
+					})	
+					.catch(function(data){
+						console.log('catch', data)
+					})
+			}
 
 			function initBoard(usr){
 				var loc = window.location.href.split('://')[1]
@@ -95,28 +84,18 @@
 				locref = 'pages/'+loc
 
 				var page = {}
-				console.log(usr)
 
 				var db = firebase.database();
 				db.ref(locref).on('value', function(snapshot){
 					if(!snapshot.val()){
 						page[locref] = {loc:loc,  email:usr.email, name:usr.the_name, created:new Date(), updated:new Date(), threads:[]}
-						db.ref().update(page)
-							.then(function(data){
-								console.log('then', data)
-							})	
-							.catch(function(data){
-								console.log('catch', data)
-							})
+						update(page)
 					}else{
 						page[locref] = snapshot.val()
 						page[locref].updated = new Date()
 					}
 
-					console.log(page[locref])
-
 					updateList()
-					
 				})
 
 
@@ -144,33 +123,34 @@
 
 
 				function updateList(){
-					$('.reply').off()
-					$('.mark').off()
-					$('.del').off()
+					console.log('updateList')
+					$('#commm .reply').off()
+					$('#commm .mark').off()
+					$('#commm .del').off()
 
 					$('#commm_mainList').html('')
 					page[locref].threads.forEach(function(d, i){
 						if(d.status != 'archived'){
-							var item = $('<li><button class="mark" id="commm_mark__'+i+'">Mark</button></li>')
+							var item = $('<li><button class="mark" id="commm_mark__'+i+'">Mark as resolved</button></li>')
 							var repl = d.replies
 							repl.forEach(function(c, j){
 								if(c.status != 'archived'){
-									var del = (c.email == usr.email) ? '<button class="del" id="commm_del__'+i+'__'+j+'">x</button>' : ''
-									var reply = $('<p>'+del+c.name+': <small>'+c.text+'</small></p>')
+									var del = (c.email == usr.email) ? '<button class="del" id="commm_del__'+i+'__'+j+'">Remove</button>' : ''
+									var reply = $('<p>'+c.name+': '+del+'<small>'+c.text+'</small></p>')
 									item.append(reply)
 								}
 							})
-							item.append('<input id="commm_reply__'+i+'" type="text" /><button class="reply" id="commm_reply_submit__'+i+'">Add</button>')
+							item.append('<textarea rows="5" id="commm_reply__'+i+'" ></textarea><button class="reply" id="commm_reply_submit__'+i+'">Reply</button>')
 							$('#commm_mainList').append(item)
 						}
 					})
 
-					$('.reply').on('click', function(){
+					$('#commm .reply').on('click', function(){
 						var id = $(this).attr('id').split('__')[1]
 						var txt = $('#commm_reply__'+id).val()
 
 						var thread = page[locref].threads[id]
-						thread.replies.push({name:usr.the_name, email:usr.email, text:txt})
+						thread.replies.push({name:usr.the_name, email:usr.email, text:txt, created:new Date()})
 
 						db.ref().update(page)
 							.then(function(data){
@@ -183,10 +163,11 @@
 						return false
 					})
 
-					$('.mark').on('click', function(){
+					$('#commm .mark').on('click', function(){
 						var id = $(this).attr('id').split('__')[1]
 						var thread = page[locref].threads[id]
 						thread.status = 'archived'
+						thread.marked_by = usr.the_name
 						db.ref().update(page)
 							.then(function(data){
 								console.log('then', data)
@@ -198,7 +179,7 @@
 						return false
 					})
 
-					$('.del').on('click', function(){
+					$('#commm .del').on('click', function(){
 						var ids = $(this).attr('id').split('__')
 						var msg = page[locref].threads[ids[1]].replies[ids[2]]
 						msg.status = 'archived'
@@ -213,7 +194,15 @@
 						return false
 					})
 
-					$('#commm_togglr_inner').text( page[locref].threads.length )
+					
+					var v = 0
+					page[locref].threads.forEach(function(d, i){
+						if(d.status != 'archived'){
+							v += 1
+						}
+					})
+					Public_Stats.update(v)
+					
 				}
 
 			}

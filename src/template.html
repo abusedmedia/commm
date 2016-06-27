@@ -4,17 +4,28 @@
 	</div>
 </div>
 
-<div id="commm_container">
+<div id="commm" style="display:none;">
 	<div id="commm_container_inner">
 
-		<div id="commm_head">
-			<button id="commm_close">></button>
-			<div id="commm_displayName">loading...</div>
-			<button id="commm_login">Login</button>
-			<a id="commm_logout" href="logout">Log-out</a>
+		<div class="commm_head_hide" commm_close>
+			<span>HIDE</span> <span>»</span>
+		</div>
 
-			<input id="commm_newtext" type="text" />
-			<button id="commm_newthread">New Thread</button>
+		<div id="commm_head">
+			
+			<div id="commm_login_btn">
+				<img src="assets/btn_google_signin_light_normal_web@2x.png" commm_login />
+			</div>
+
+			<div id="commm_name">
+				<span id="commm_displayName">loading...</span><a id="commm_logout" href="logout">Log-out</a>
+			</div>
+
+			<div id="commm_new_thread">
+				<textarea rows="5" id="commm_newtext"></textarea>
+				<button id="commm_newthread">New Message</button>
+			</div>
+			
 		</div>
 
 		<ul id="commm_mainList">
