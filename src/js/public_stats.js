@@ -5,11 +5,11 @@
 	function getLoc(){
 		var loc = window.location.href.split('://')[1]
 
-		loc = loc.replace('.', '_')
-		loc = loc.replace('#', '__')
-		loc = loc.replace('$', '___')
-		loc = loc.replace('[', '--')
-		loc = loc.replace(']', '--')
+		loc = loc.replace(/\./g, '_')
+		loc = loc.replace(/#/g, '__')
+		loc = loc.replace(/\$/g, '___')
+		loc = loc.replace(/\[/g, '--')
+		loc = loc.replace(/\]/g, '--')
 
 		return loc
 	}
