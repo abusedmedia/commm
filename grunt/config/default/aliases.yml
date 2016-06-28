@@ -10,25 +10,7 @@ build:
   - 'postcss'
   - 'uglify:generated'
   - 'usemin'
+  - 'concat:sandbox'
   - 'clean:tmp'
 
-
-
-build__:
-  - 'clean:dist' # clean public folder
-  - 'copy:app' # duplicate the entire src folder for manipulation
-
-  - 'useminPrepare:multi'
-  - 'concat:generated'
-  - 'postcss'
-  - 'uglify:generated'
-  - 'cssmin:generated'
-  - 'usemin'
-
-  - 'processhtml:multi'
-  - 'htmlmin:multi'
-  
-  - 'copy:dist'
-  - 'inline' # inject css into html 
-  - 'clean:tmp'
 

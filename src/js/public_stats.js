@@ -2,7 +2,19 @@
 
 	Public_Stats = {};
 	
-	var loc = window.location.href.split('://')[1]
+	function getLoc(){
+		var loc = window.location.href.split('://')[1]
+
+		loc = loc.replace('.', '_')
+		loc = loc.replace('#', '__')
+		loc = loc.replace('$', '___')
+		loc = loc.replace('[', '--')
+		loc = loc.replace(']', '--')
+
+		return loc
+	}
+	
+	var loc = getLoc()
 
 	// get the public stats number to populate the + btn
 	var stats = {}
@@ -39,5 +51,6 @@
 	}
 
 	Public_Stats.update = update
-
+	Public_Stats.getLoc = getLoc
+	
 })();

@@ -78,8 +78,7 @@
 			}
 
 			function initBoard(usr){
-				var loc = window.location.href.split('://')[1]
-				console.log(loc)
+				var loc = Public_Stats.getLoc()
 
 				locref = 'pages/'+loc
 
